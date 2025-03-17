@@ -1,0 +1,11 @@
+.sidebar-nav {
+	margin-top: 0;
+	padding: 0;
+	list-style: none;
+	top: 30px;
+	width: 300px;
+}
+
+.myfont {
+	font-size: 23px;
+}

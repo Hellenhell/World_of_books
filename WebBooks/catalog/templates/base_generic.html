@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% block title %}<title>Мир книг</title>{% endblock %}
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	
+	{% load static %}
+	<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+	<link rel="stylesheet" href="{% static 'bootstrap-5.0.2-dist/css/bootstrap.min.css' %}">
+	
+</head>
+
+<body>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-7 offset-sm-3">
+			{% block head %}
+				
+			{% endblock %}
+			</div>
+		</div>
+	</div>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-3" style="height: 100vh; background-color: #dedfe3">
+			{% block sidebar %}
+			<img src="{% static 'images/logotip.png' %}" class="img-fluid">
+			<ul class="sidebar-nav">
+				<li><h2>Меню</h2></li>
+				<li><a href="{% url 'index' %}" class="myfont link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Главная страница</a></li>
+				<li><a href="{% url 'books' %}" class="myfont link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Все книги</a></li>
+				<li><a href="{% url 'authors' %}" class="myfont link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Все авторы</a></li>
+				<li><a href="{% url 'my-borrowed' %}" class="myfont link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Мои заказы</a></li>
+				
+				<li><a data-bs-toggle="collapse" href="#navbarContent" aria-expanded="false" aria-controls="navbarContent" class="myfont link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Для сотрудников</a></li>
+				<!--<li><button type="button" class="btn btn-link" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false">Для сотрудников</button></li>-->
+				
+				<div class="collapse" id="navbarContent">
+				<ul>
+				
+					<li><a href="{% url 'author_create' %}" class="myfont link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Добавить автора книг</a></li>
+					<li><a href="{% url 'book_create' %}" class="myfont link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Добавить книгу</a></li>
+				
+				</ul>
+				</div>
+				<p>
+				{% if user.is_authenticated %}
+					<li>Пользователь: {{ user.get_username}}</li>
+					<form action="{% url 'logout' %}" method="post">
+					{% csrf_token %}
+					<button type="submit"  class="btn btn-outline-dark">Выход</button>
+					</form>
+				{% else %}
+					<form action="{% url 'login' %}?next={{request.path}}">
+					<button  class="btn btn-outline-dark">Вход</button>
+					</form>
+				{% endif %}
+				</p>
+			</ul>
+			{% endblock %}
+			</div>
+			<div class="col-sm-9" style="margin-top:40px">
+			<h1>Сайт "Мир книг"</h1>
+			<div class="card card-body">
+			{% block content %}{% endblock %}
+			</div>
+			{% block pagination %}
+				{% if is_paginated %}
+					<div class="pagination">
+						<span class="page-links">
+							{% if page_obj.has_previous %}
+								<a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+							{% endif %}
+							<span class="page-current">
+								Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+							</span>
+							{% if page_obj.has_next %}
+								<a href="{{ request.path }}?page={{ page_obj.next_page_number }}">Следующая</a>
+							{% endif %}
+						</span>
+					</div>
+				{% endif %}
+			{% endblock %}
+			{% block footer %}
+				{% block copyright %}
+					<p>Copyright ООО "Люди и книги", 2025. Все права защищены</p>
+				{% endblock %}
+			{% endblock %}
+			</div>
+		</div>
+		
+	</div>
+<script src="{% static 'bootstrap-5.0.2-dist\js\bootstrap.bundle.js' %}"></script>
+</body>
+</html>
